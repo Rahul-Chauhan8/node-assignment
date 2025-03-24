@@ -13,6 +13,7 @@ import { rateLimit } from 'express-rate-limit'
 dotenv.config();
 
 const initServer = async () => {
+    console.log(process.env.DATABASE_URL,'-------DATABASE_URL------')
     try {
         const app = express();
         const port = process.env.PORT || 3000;
