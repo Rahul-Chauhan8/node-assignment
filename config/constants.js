@@ -19,3 +19,5 @@ export const PAGINATION = {
   START: 0,
   LIMIT: 10,
 };
+
+export const saltRounds = 10;

@@ -1,84 +1,59 @@
-import config from "config";
 import { Sequelize, DataTypes } from "sequelize";
 
-export default class DB {
-  constructor() {
-    this.seqClient = null;
-    this.dbConfig = config.db;
-    this.mysqlConfigClient = this.dbConfig.mysql.client;
-    this.db = {};
-    this.isDbRunning = true;
-  }
+export const db = {
+  sqlClient: null,
+  sequelize: null,
+  isDbRunning: true,
+  models: {}
+};
 
-  async connectMySQLClient() {
-    try {
-      this.seqClient = new Sequelize(
-        this.mysqlConfigClient.database,
-        this.mysqlConfigClient.username,
-        this.mysqlConfigClient.password,
-        {
-          host: this.mysqlConfigClient.host,
-          port: this.mysqlConfigClient.port,
-          dialect: this.mysqlConfigClient.dialect,
-          operatorsAliases: 0,
-          logging: true,
-          pool: {
-            min: this.mysqlConfigClient.pool.min,
-            max: this.mysqlConfigClient.pool.max,
-            idle: this.mysqlConfigClient.pool.idle,
-          },
-          define: {
-            underscored: false,
-          },
-          logging: false,
-        }
-      );
-      await this.seqClient
-        .authenticate()
-        .then(() => {
-          console.log(
-            "Connection to Client DB has been established successfully."
-          );
-        })
-        .catch((err) => {
-          console.error("Unable to connect to the Client database:", err);
-        });
-    } catch (err) {
-      throw err;
-    }
-  }
-  async init() {
-    await this.connectMySQLClient();
-    await this.setupModels();
-  }
-
-  async checkConnection() {
-    try {
-      return this.isDbRunning;
-    } catch (error) {
-      return !this.isDbRunning;
-    }
-  }
-
-  async setupModels() {
-    this.db.sqlClient = this.seqClient;
-    this.db.sequelize = this.seqClient;
-    this.db.models = {};
-    this.db.models.Roles = require("../../database/models/roles.js")(
-      this.seqClient,
-      DataTypes
+export const connectMySQLClient = async () => {
+  try {
+    db.sqlClient = new Sequelize(
+      process.env.DB_DATABASE,
+      process.env.DB_USER_NAME,
+      process.env.DB_PASSWORD,
+      {
+        host: process.env.DB_HOST,
+        port: process.env.DB_PORT,
+        dialect: process.env.DB_DIALECT,
+        operatorsAliases: 0,
+        logging: true,
+        define: {
+          underscored: false,
+        },
+        logging: false,
+      }
     );
-    this.db.models.Users = require("../../database/models/users.js")(
-      this.seqClient,
-      DataTypes
-    );
-   
-    /**Associations */
-    
-    this.db.sqlClient.sync({ alter: true });
-  }
-
-  async getDB() {
-    return this.db;
+    await db.sqlClient
+      .authenticate()
+      .then(() => {
+        console.log(
+          "Connection to Client DB has been established successfully."
+        );
+      })
+      .catch((err) => {
+        console.error("Unable to connect to the Client database:", err);
+      });
+  } catch (err) {
+    throw err;
   }
 }
+
+export const setupModels = async () => {
+  db.sequelize = db.sqlClient;
+
+  db.models.Roles = require("../../models/roles.js")(
+    db.sqlClient,
+    DataTypes
+  );
+  db.models.Users = require("../../models/users.js")(
+    db.sqlClient,
+    DataTypes
+  );
+
+  /**Associations */
+
+  db.sqlClient.sync({ alter: true });
+}
+

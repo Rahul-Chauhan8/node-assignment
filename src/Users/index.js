@@ -1,20 +1,10 @@
-import userController from "./users.controller"
-import Authorization from "../helpers/authorization";
+import * as  userController from "./users.controller"
+import { authorize } from "../helpers/authorization";
 
-export default class Users {
-    constructor(router, db) {
-        this.authorization = new Authorization();
-        this.router = router;
-        this.db = db;
-        this.userInstance = new userController();
-    }
-    async routes() {
-        await this.userInstance.init(this.db);
-        await this.authorization.init(this.db);
-        /** user Profile */
-        this.router.get('/users/profile', await this.authorization.authorize(), (req, res) => {
-            this.userInstance.userProfile(req, res)
-        })
-    }
+
+export const routes = async (router)=> {
+    /** user Profile */
+    router.get('/users/profile', await authorize(), (req, res) => {
+        userController.userProfile(req, res)
+    })
 }
-

@@ -1,5 +1,5 @@
 import { RESPONSE_CODES } from "../../config/constants";
-import { CommonMessages } from "../../constants/message/common";
+import { CommonMessages } from "../../config/message/common";
 
 const authMiddleWare = async (req, res, next) => {
   try {

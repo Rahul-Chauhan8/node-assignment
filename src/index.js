@@ -1,21 +1,10 @@
-import Auth from './Auth';
-import Users from './Users';
+import * as auth from './Auth';
+import * as users from './Users';
 
 
-export default class Routes {
-    constructor(router, db) {
-        this.router = router;
-        this.DatabaseConnect = db;
-    }
+export const routesRegistration = async (router) => {
 
-    async routesRegistration() {
-        this.db = await this.DatabaseConnect.getDB();
+    await auth.routes(router);
+    await users.routes(router);
 
-        this.auth = new Auth(this.router, this.db);
-        await this.auth.routes();
-
-        this.users = new Users(this.router, this.db);
-        await this.users.routes();
-        
-    }
 }

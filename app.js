@@ -1,36 +1,68 @@
-require('dotenv').config();
-import http from 'http';
-import Server from './bin/server'
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import dotenv from 'dotenv';
+import path from 'path';
+import { connectMySQLClient, setupModels } from './src/helpers/db';
+import authMiddleWare from './src/helpers/middlewares';
+import { routesRegistration } from './src/index';
 
-class Application {
-    constructor() {
-        this.app = "";
-        this.bind = "";
-        this.port = "";
-        this.server = "";
-        this.serverObj = "";
+dotenv.config();
+
+const initServer = async () => {
+    try {
+        const app = express();
+        const port = process.env.PORT || 3000;
+
+        // Middleware
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(cookieParser());
+        app.use(morgan('tiny'));
+        app.use(cors({
+            exposedHeaders: [
+                'date', 'content-type', 'content-length', 'connection', 'server',
+                'x-powered-by', 'access-content-allow-origin', 'authorization', 'x-final-url'
+            ],
+            allowedHeaders: ['content-type', 'accept', 'authorization']
+        }));
+        app.use(authMiddleWare);
+
+        // Set EJS as the template engine
+        app.set('view engine', 'ejs');
+        app.set('views', path.join(__dirname, './src/views'));
+
+        // Initialize Database
+        await connectMySQLClient();
+        await setupModels()
+
+        // Routes
+        let router = express.Router();
+        await routesRegistration(router);
+        app.use(cors(), router);
+
+        // Default Route
+        app.get("/", (req, res) => res.render('login', { error: '', success: '' }));
+
+        // Start server
+        app.listen(port, () => console.log(`Server running on: ${port}`));
+
+        return app;
+    } catch (err) {
+        console.error("Error starting server:", err);
+        process.exit(1);
     }
+};
 
-    async initApp() {
-        this.port = process.env.PORT;
-        this.serverObj = new Server();
-        this.app = await this.serverObj.initServer();
-        this.app.set('port', this.port);
-        this.app.listen(this.port, () => {
-            console.log(`Server running on: ${this.port}`)
-        })
-        // await this.initAppServer();
-    }
-}
-
-const app = new Application();
-
+// Start the application
 (async () => {
     process.setMaxListeners(0);
-    await app.initApp();
+    await initServer();
 })();
 
-// The unhandledRejection listener
+// Handle unhandled rejections
 process.on('unhandledRejection', error => {
-    console.error('unhandledRejection', error);
+    console.error('Unhandled Rejection:', error);
 });

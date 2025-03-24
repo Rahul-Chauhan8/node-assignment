@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const {  saltRounds } = require("../../config/keys");
+const {  saltRounds } = require("../../config/constants");
 
 const extractToken = (authToken) => {
   if (authToken) {
