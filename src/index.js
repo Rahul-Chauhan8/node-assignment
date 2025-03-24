@@ -1,6 +1,7 @@
 import Auth from './Auth';
 import Users from './Users';
 
+
 export default class Routes {
     constructor(router, db) {
         this.router = router;

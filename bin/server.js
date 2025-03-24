@@ -58,7 +58,7 @@ export default class Server {
             this.app.get("/", async (req, res) => {
                 try {
                     console.log("enter here");
-                    return res.render('login', { error: '' });
+                    return res.render('login', { error: '',success:'' });
                 } catch (error) {
                     res.status(500).send("An error occurred");
                 }

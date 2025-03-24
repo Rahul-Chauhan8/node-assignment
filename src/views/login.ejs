@@ -18,6 +18,10 @@
           </div>
         <% } %>
 
+        <% if (success) { %>
+            <div style="color: green; font-size: 14px; background: #ffe6e6; padding: 10px; margin-bottom: 10px; border-radius: 5px;"><%= success %></div>
+          <% } %>
+
         <form id="loginForm" action="/auth/login" method="post" onsubmit="return validateForm()">
             <div style="margin-bottom: 10px; text-align: left;">
                 <label for="email" style="font-weight: bold;">Email</label>

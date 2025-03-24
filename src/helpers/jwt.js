@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const { secretKey, saltRounds } = require("../../config/keys");
+const {  saltRounds } = require("../../config/keys");
 
 const extractToken = (authToken) => {
   if (authToken) {
@@ -17,7 +17,7 @@ const extractToken = (authToken) => {
 export const verifyToken = (authorization) => {
   try {
     const token = extractToken(authorization);
-    const decoded = jwt.verify(token, secretKey);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     return decoded;
   } catch (error) {
     return "invalid jwt"
@@ -25,7 +25,7 @@ export const verifyToken = (authorization) => {
 };
 
 // export const refreshToken = (payload) => jwt.sign(payload, jwtToken, { expiresIn: "24hr" });
-export const refreshToken = (payload) => jwt.sign(payload, secretKey);
+export const refreshToken = (payload) => jwt.sign(payload, process.env.JWT_SECRET_KEY);
 
 export const setResponseToken = (res, token) => res.set("authorization", token);
 

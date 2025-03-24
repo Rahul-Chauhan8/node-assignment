@@ -1,19 +1,19 @@
+import { QueryTypes } from 'sequelize';
+
 
 class Users {
   async init(db) {
     this.Models = db.models;
     this.sql = db.sqlClient
   }
-  getByEmail = async (email) => {
-    return await this.Models.Users.findOne({ where: { email }, raw: true })
-  }
 
-  getByUsername = async (username) => {
-    return await this.Models.Users.findOne({ where: { username }, raw: true })
-  }
-
-  createUser = async (data) => {
-    return await this.Models.Users.create(data)
+  async getByEmail(email) {
+    const query = `SELECT * FROM users WHERE email = :email LIMIT 1`;
+    const [results] = await this.sql.query(query, {
+      replacements: { email },  // ✅ Secure way to pass variables
+      type: QueryTypes.SELECT,
+    });
+    return results || null;
   }
 
 }

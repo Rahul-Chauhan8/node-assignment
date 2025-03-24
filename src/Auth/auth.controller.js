@@ -33,7 +33,7 @@ export default class Auth {
 
       await this.services.createUser(req.body)
 
-      return res.render('login', { error: '' });
+      return res.render('login', { error: '',success:'Registration successful. Please log in' });
 
     } catch (error) {
       console.log(error)
@@ -55,18 +55,18 @@ export default class Auth {
       );
 
       if (!response.data.success) {
-        return res.render('login', { error: 'Invalid reCAPTCHA. Please try again.' });
+        return res.render('login', { error: 'Invalid reCAPTCHA. Please try again.',success:'' });
       }
 
       /** check user email */
       const checkEmail = await this.services.getByEmail(email);
       if (!checkEmail) {
-        return res.render('login', { error: 'Email is not registerd.' });
+        return res.render('login', { error: 'Email is not registerd.',success:'' });
       }
       /** check password */
       const passwordMatch = await bcrypt.compare(password, checkEmail.password);
       if (!passwordMatch) {
-        return res.render('login', { error: AuthMessages.INVALID_PASSWORD });
+        return res.render('login', { error: AuthMessages.INVALID_PASSWORD,success:'' });
       }
       delete checkEmail.password
       const token = refreshToken(checkEmail);
