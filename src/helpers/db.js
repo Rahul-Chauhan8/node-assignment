@@ -10,13 +10,15 @@ export const db = {
 export const connectMySQLClient = async () => {
   try {
     db.sqlClient = new Sequelize(
-      process.env.DB_DATABASE,
-      process.env.DB_USER_NAME,
-      process.env.DB_PASSWORD,
+      process.env.DATABASE_URL,
       {
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
         dialect: process.env.DB_DIALECT,
+        // dialectOptions: {
+        //   ssl: {
+        //     require: true,
+        //     rejectUnauthorized: false, // Allow self-signed certificates (NeonDB requires this)
+        //   },
+        // },
         operatorsAliases: 0,
         logging: true,
         define: {
@@ -43,10 +45,6 @@ export const connectMySQLClient = async () => {
 export const setupModels = async () => {
   db.sequelize = db.sqlClient;
 
-  db.models.Roles = require("../../models/roles.js")(
-    db.sqlClient,
-    DataTypes
-  );
   db.models.Users = require("../../models/users.js")(
     db.sqlClient,
     DataTypes

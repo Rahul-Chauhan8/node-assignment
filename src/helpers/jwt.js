@@ -1,7 +1,4 @@
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
-const {  saltRounds } = require("../../config/constants");
 
 const extractToken = (authToken) => {
   if (authToken) {
@@ -25,11 +22,5 @@ export const verifyToken = (authorization) => {
 };
 
 // export const refreshToken = (payload) => jwt.sign(payload, jwtToken, { expiresIn: "24hr" });
-export const refreshToken = (payload) => jwt.sign(payload, process.env.JWT_SECRET_KEY);
+export const refreshToken = (payload) => jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '15m' });
 
-export const setResponseToken = (res, token) => res.set("authorization", token);
-
-export const generateHash = async (text) => {
-  const hash = await bcrypt.hash(text, saltRounds);
-  return hash;
-};

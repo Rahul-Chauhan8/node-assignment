@@ -6,6 +6,7 @@ export const userProfile = async (req, res) => {
     const { user } = req
     /** check user email */
     const checkEmail = await services.getByEmail(user.email);
+    console.log('------')
 
     res.render('profile', { user: checkEmail });
 

@@ -19,19 +19,8 @@ Before running the project, ensure you have installed:
 git clone https://github.com/Rahul-Chauhan8/node-assignment.git
 cd node-assignment
 
-Create a .env file in the root directory and add:
-SERVER= local
-PORT = 3000
-DB_HOST=localhost
-DB_USER_NAME=postgres
-DB_PASSWORD='root'
-DB_PORT =5432
-DB_DATABASE=node-assignment
-DB_DIALECT=postgres
-JWT_SECRET_KEY = top_tipper64#$52
+Create a .env file in the root directory and add data from file i sent in email.
 
-CAPTCHA_SITE_KEY = 6LcpQf4qAAAAAMBDO0PGxJFlIklNOTUOtWAN9n-P
-CAPTCHA_SECRET_KEY  = 6LcpQf4qAAAAAHV20GtuurmnM_iXhigKrwQruBNQ
 
 Run commands:
 

@@ -68,8 +68,7 @@ export const userLogin = async (req, res) => {
     delete checkEmail.password
     const token = refreshToken(checkEmail);
 
-
-    res.cookie('token', token, { httpOnly: true });
+    res.cookie('token', token, { httpOnly: false });
 
     return res.redirect('/users/profile');
 

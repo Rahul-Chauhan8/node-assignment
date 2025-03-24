@@ -13,43 +13,26 @@ export const authorize = async () => {
       }
       /** Decode JWT Token */
       const decoded = verifyToken(token);
-
+      
       req.decoded = decoded;
       if (decoded === "jwt expired") {
-        return res.status(RESPONSE_CODES.UNAUTHORIZED).json({
-          status: 0,
-          code: RESPONSE_CODES.UNAUTHORIZED,
-          message: CommonMessages.UNAUTHORIZED_USER,
-          data: null,
-        });
+        return res.render('login', { error: 'Your session expired, Please login again', success: '' })
       }
       /** Check user authorization */
       if (decoded == "invalid jwt") {
-        return res.status(RESPONSE_CODES.UNAUTHORIZED).json({
-          status: 0,
-          code: RESPONSE_CODES.UNAUTHORIZED,
-          message: CommonMessages.UNAUTHORIZED_USER,
-          data: null,
-        });
+        return res.render('login', { error: 'Your session expired, Please login again', success: '' })
       }
       if (decoded != "invalid signature") {
         //   /** check user exist or not */
 
         const user = await db.models.Users.findOne({ where: { email: decoded.email }, raw: true });
         if (!user) {
-          return res.status(RESPONSE_CODES.UNAUTHORIZED).json({
-            status: 0,
-            code: RESPONSE_CODES.UNAUTHORIZED,
-            message: CommonMessages.UNAUTHORIZED_USER,
-            data: null,
-          });
+          return es.render('login', { error: '', success: '' })
         }
         req.user = user;
         /** return user */
         return next();
-
       }
-
     },
   ];
 }

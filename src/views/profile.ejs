@@ -29,6 +29,49 @@
 
     </div>
 
+    <script>
+        function getTokenExpiration() {
+            const token = document.cookie.split('; ').find(row => row.startsWith('token='));
+            console.log(token, '----token---')
+            if (!token) return null;
+
+            try {
+                const tokenValue = token.split('=')[1];
+                const payloadBase64 = tokenValue.split('.')[1];
+                const payload = JSON.parse(atob(payloadBase64)); // Decode JWT payload
+
+                console.log(payload, '------payload---------')
+
+                return payload.exp * 1000; // Convert to milliseconds
+            } catch (error) {
+                console.error("Invalid token:", error);
+                return null;
+            }
+        }
+
+        function checkTokenExpiry() {
+            const expiryTime = getTokenExpiration();
+            if (!expiryTime) return;
+            console.log(expiryTime,'------expiryTime-----')
+
+            const warningTime = expiryTime - (2 * 60 * 1000); // 2 minutes before expiry
+            console.log(warningTime,'------warningTime-----')
+            const currentTime = Date.now();
+            console.log(currentTime,'------currentTime-----')
+
+
+            if (currentTime >= warningTime && currentTime < expiryTime) {
+                console.log('in if condition')
+                alert("Your session is about to expire in 2 minutes. Please re-login.");
+            }
+        }
+
+        // Check every 30 seconds
+        setInterval(checkTokenExpiry, 30000);
+       
+    </script>
+
+
 </body>
 
 </html>
