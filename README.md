@@ -27,3 +27,13 @@ Run commands:
 1. npm install
 
 2. npm run start
+
+
+Deployed on aws Ec2 instance
+ you can access using this url :- http://ec2-43-204-214-6.ap-south-1.compute.amazonaws.com:3000/
+
+But i have not a registered domain so thats why googel captcha is not working.
+
+Rate Limiting added to the login route using express-rate-limit.
+
+Token Expiry Warning added on before 2 minutes from token expiration.
