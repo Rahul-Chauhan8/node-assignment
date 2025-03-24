@@ -3,11 +3,9 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import DB from '../src/helpers/db';
 import Routes from '../src/index';
-import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from '../config/swagger'
+
 const path = require('path');
 import cors from 'cors';
-const session = require('express-session');
 const cookieParser = require('cookie-parser');
 import authMiddleWare from '../src/helpers/middlewares';
 const morgan = require("morgan");
@@ -65,7 +63,6 @@ export default class Server {
             });
             await this.healthyDB();
             await this.configureRoutes(this.db);
-            this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
             return this.app
         } catch (err) {
             throw err;
