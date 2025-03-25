@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 module.exports = {
     registerValidator: Joi.object().keys({
-        email: Joi.string().trim().max(50).email().message("Please enter a valid email").required().messages({
+        email: Joi.string().trim().max(50).email().lowercase().message("Please enter a valid email").required().messages({
             "any.required": "Email is required.",
             "string.empty": "Email can not be an empty field."
         }),
@@ -18,7 +18,7 @@ module.exports = {
         }),
     }),
     loginValidator: Joi.object().keys({
-        email: Joi.string().trim().max(50).email().message("Please enter a valid email").required().messages({
+        email: Joi.string().trim().max(50).email().lowercase().message("Please enter a valid email").required().messages({
             "any.required": "Email is required.",
             "string.empty": "Email can not be an empty field."
         }),

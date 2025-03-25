@@ -28,6 +28,8 @@ Run commands:
 
 2. npm run start
 
+use url http://localhost:3000/
+
 
 Deployed on aws Ec2 instance
  you can access using this url :- http://ec2-43-204-214-6.ap-south-1.compute.amazonaws.com:3000/

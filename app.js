@@ -7,7 +7,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { connectMySQLClient, setupModels } from './src/helpers/db';
 import authMiddleWare from './src/helpers/middlewares';
-import { routesRegistration } from './src/index';
+import { authRoutes } from './src/Auth/index'
+import { userRoutes } from './src/Users/index'
 
 dotenv.config();
 
@@ -34,7 +35,8 @@ const initServer = async () => {
 
         // Routes
         let router = express.Router();
-        await routesRegistration(router);
+        await authRoutes(router)
+        await userRoutes(router)
         app.use(cors(), router);
 
         // Default Route
